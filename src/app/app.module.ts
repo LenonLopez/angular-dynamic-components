@@ -6,6 +6,7 @@ import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { SquareComponent } from './square/square.component';
 import { MoveDirective } from './directives/move.directive';
+import { DynamoService } from './services/dynamo.service';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,7 @@ import { MoveDirective } from './directives/move.directive';
     FormsModule,
     HttpModule
   ],
-  providers: [],
+  providers: [DynamoService],
   entryComponents:[SquareComponent],
   bootstrap: [AppComponent]
 })
