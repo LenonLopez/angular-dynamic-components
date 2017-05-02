@@ -5,7 +5,7 @@ import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 import { SquareComponent } from './square/square.component';
-import { MoveDirective } from './move.directive';
+import { MoveDirective } from './directives/move.directive';
 
 @NgModule({
   declarations: [

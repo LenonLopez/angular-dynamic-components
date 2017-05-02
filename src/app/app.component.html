@@ -1,8 +1,14 @@
 <h1>
   {{title}}
 </h1>
-<input #inputSquare type="number" placeholder="enter a component Id">
-<button (click)="handleDestroy(inputSquare)">submit destroy</button>
-
-  <div #entry></div>
+<div style="background-color:red; width:4em;">
+  <input #deleteSquareId type="number" placeholder="enter a square's Id">
+  <button (click)="deleteSquare(deleteSquareId)">delete square</button>
+</div>
+<div style="background-color:blue; width:4em;">
+  <input #createSquareId type="number" placeholder="enter the square's Id">
+  <input #createSquareName  type="text" placeholder="enter the square's name">
+  <button (click)="createSquare(createSquareId,createSquareName)">create square</button>
+</div>
+<div #entry></div>
 

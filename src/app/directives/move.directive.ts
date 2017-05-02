@@ -1,4 +1,4 @@
-import { HostBinding, HostListener, Directive, ElementRef } from '@angular/core';
+import { HostBinding, HostListener, Directive, ElementRef, Renderer } from '@angular/core';
 
 @Directive({
   selector: '[square-move]'
@@ -10,7 +10,7 @@ top: string;
 left: string;
 */
 private bounding; 
-  constructor(private el: ElementRef) {
+  constructor(private el: ElementRef, private renderer:Renderer) {
   this.bounding = this.el.nativeElement.getBoundingClientRect();
     
    }
@@ -48,9 +48,11 @@ onTouchMove(event:TouchEvent){
 @HostListener("touchmove",["$event"])
 onTouchDown(event:TouchEvent){
   console.log("TouchMove", event);
-  let left = event.touches[0].clientX - this.bounding.left;
-  let top = event.touches[0].clientY - this.bounding.top;
-  this.setPosition(top, left);
+  if(this.isSelected){
+    let left = event.touches[0].clientX - this.bounding.left;
+    let top = event.touches[0].clientY - this.bounding.top;
+    this.setPosition(top, left);
+  }
 }
 @HostListener("touchend",["$event"])
 onTouchEnd(event:TouchEvent){
@@ -66,8 +68,11 @@ onMouseLeave(event:MouseEvent){
 }*/
 
 private setPosition(top:number, left: number) {
-  this.el.nativeElement.style.top = `${top}px`;
+  this.renderer.setElementStyle(this.el.nativeElement,"top",`${top}px`);
+  this.renderer.setElementStyle(this.el.nativeElement,"left",`${left}px`);
+  /*this.el.nativeElement.style.top = `${top}px`;
   this.el.nativeElement.style.left = `${left}px`;
+  */
 }
 
 }

@@ -6,18 +6,19 @@ import { EventEmitter,Component, OnInit, ViewChild, ElementRef, AfterContentInit
   templateUrl: './square.component.html',
   styleUrls: ['./square.component.css']
 })
-export class SquareComponent implements OnInit, AfterContentInit, AfterViewInit{
+export class SquareComponent{
 
-@ViewChild('square') square:ElementRef;
+//@ViewChild('square') square:ElementRef;
 @Input() config = { position:null,name:'', id:null };
-@Output() setPosition: EventEmitter<any> = new EventEmitter();
+//@Output() setPosition: EventEmitter<any> = new EventEmitter();
 
 
 
   constructor(private renderer: Renderer) {
     
    }
-
+}
+/*
   ngOnInit() {
   }
 
@@ -30,20 +31,20 @@ export class SquareComponent implements OnInit, AfterContentInit, AfterViewInit{
 
   }
 
-  /*handleClick(square){
+  handleClick(square){
     //needs a lot of work to actually move
     this.config.position ={top:"1px", left:"1px"};
     this.handleSetPosition();
-  }*/
+  }
   
- /* handleMove(square){
+  handleMove(square){
       //TODO
-  }*/
+  }
  
   handleSetPosition(){
     this.setPosition.emit(this.config);
-  }
-  }
+  }*/
+  
 
 
 
