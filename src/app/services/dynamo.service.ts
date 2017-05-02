@@ -23,5 +23,20 @@ return  this.http
         .catch((error: any)=> Observable.throw(error.json()));
 }
 
+/*updateSquare(square:Square): Observable<Square>{
+    let headers = new Headers({
+        'Content-Type': 'application/json',
+        'X-Debug': 'true'
+    });
+    let options = new RequestOptions({
+        
+        headers:headers
 
+    });
+        return  this.http
+                .put(`${API}/${passenger.id}`, passenger, options)
+                .map((response: Response)=>response.json())
+                .catch((error: any)=> Observable.throw(error.json()));
+
+}*/
 }

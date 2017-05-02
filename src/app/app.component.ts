@@ -2,7 +2,8 @@ import { Square } from './models/square.interface';
 import { DynamoService } from './services/dynamo.service';
 import { SquareComponent } from './square/square.component';
 import { ComponentRef, Component,AfterContentInit, ViewChild, ViewContainerRef, ComponentFactoryResolver } from '@angular/core';
-interface SquareDict {
+
+interface SquareComponentDict {
  [id: number]: ComponentRef<SquareComponent>;
 }
 @Component({
@@ -14,7 +15,7 @@ export class AppComponent implements AfterContentInit{
   
   @ViewChild('entry', {read: ViewContainerRef}) entry: ViewContainerRef;
   private squareCompFactory = this.resolver.resolveComponentFactory(SquareComponent);
-  private squareDict: SquareDict ={};
+  private squareDict: SquareComponentDict ={};
   
   public title = 'Dynamic Components';
   
@@ -26,25 +27,18 @@ export class AppComponent implements AfterContentInit{
   this.service.getSquares()
               .subscribe((data:Square[])=> {
 
-                this.processSquares(data);
+                data.forEach(square=>{
+
+                  this.createComponent(square);
+
+                });
 
               });
   }
-  processSquares(data){
-    console.log(data);
-    if(data !== null){
-      data.forEach(square => {
-         
-        let dynamicSquare = this.entry.createComponent(this.squareCompFactory);
-          dynamicSquare.instance.config = square;
-         //dynamicSquare.instance.setPosition.subscribe(this.handleSquareEvent);
-          this.squareDict[square.id] = dynamicSquare;
-          
-        });
-    }
-  }
-  handleSquareEvent(event){
+
+  onSquareEmit(event){
     console.log("FROM APP COMPONENT:",event);
+    //this.service.updateSquare(event);
   }
 
   deleteSquare(id){
@@ -63,12 +57,19 @@ export class AppComponent implements AfterContentInit{
       id: squareId,
       name: squareName
     }
-    if(squareId !== '' && squareName !== ''){
-    let dynamicSquare = this.entry.createComponent(this.squareCompFactory);
-      dynamicSquare.instance.config = configObj;
-      //dynamicSquare.instance.setPosition.subscribe(this.handleSquareEvent);
-      this.squareDict[squareId] = dynamicSquare;
 
+    if(squareId !== '' && squareName !== ''){
+        this.createComponent(configObj);
     }
   }
+
+  createComponent(configObj){
+
+    let dynamicSquare = this.entry.createComponent(this.squareCompFactory);
+      dynamicSquare.instance.config = configObj;
+      dynamicSquare.instance.updateConfig.subscribe(this.onSquareEmit);
+      this.squareDict[configObj.id] = dynamicSquare;
+    }
+
 }
+

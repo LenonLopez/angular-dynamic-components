@@ -1,5 +1,7 @@
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { EventEmitter,Component, OnInit, ViewChild, ElementRef, AfterContentInit, AfterViewInit, Renderer, Input, Output } from '@angular/core';
+import { EventEmitter,Component, Input, Output } from '@angular/core';
+
+import { Square } from './../models/square.interface';
 
 @Component({
   selector: 'app-square',
@@ -8,43 +10,16 @@ import { EventEmitter,Component, OnInit, ViewChild, ElementRef, AfterContentInit
 })
 export class SquareComponent{
 
-//@ViewChild('square') square:ElementRef;
-@Input() config = { position:null,name:'', id:null };
-//@Output() setPosition: EventEmitter<any> = new EventEmitter();
+@Input() config:Square;
+@Output() updateConfig: EventEmitter<Square> = new EventEmitter();
 
+  constructor(){}
+  
+   setPosition(event){
+     let left = event.target.offsetParent.offsetLeft;
+     let top = event.target.offsetParent.offsetTop;
+     this.config.position = {top: top,left:left };
 
-
-  constructor(private renderer: Renderer) {
-    
+     this.updateConfig.emit(this.config);
    }
 }
-/*
-  ngOnInit() {
-  }
-
-  ngAfterContentInit(){
-
-  }
-  ngAfterViewInit(){
-    //this.handleClick.apply()
-    //this.renderer.listen(this.square.nativeElement, "click", this.handleClick);
-
-  }
-
-  handleClick(square){
-    //needs a lot of work to actually move
-    this.config.position ={top:"1px", left:"1px"};
-    this.handleSetPosition();
-  }
-  
-  handleMove(square){
-      //TODO
-  }
- 
-  handleSetPosition(){
-    this.setPosition.emit(this.config);
-  }*/
-  
-
-
-
