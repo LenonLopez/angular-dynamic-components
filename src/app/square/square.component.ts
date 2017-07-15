@@ -1,5 +1,5 @@
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { EventEmitter, Component, Input, Output, ViewChild } from '@angular/core';
+import { EventEmitter, Component, Input, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/map';
@@ -19,7 +19,8 @@ import { Square, Position } from './../models/square.interface';
                 <button (click)="setPosition($event)">set</button>
             </div>
             `,
-  styleUrls: ['./square.component.css']
+  styles: ['.square {width:50px; height:50px; background:blue; position:absolute; top:0px; left:0px; font-size:30px; color: orange}'],
+  encapsulation: ViewEncapsulation.None
 })
 export class SquareComponent {
   private _OFFSET: number = 50;
