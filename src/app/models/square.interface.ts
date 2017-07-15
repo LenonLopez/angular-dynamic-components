@@ -4,7 +4,7 @@ export interface Square {
     position:Position;
 }
 
-interface Position{
-    top:string;
+export interface Position{
+    top: string;
     left: string;
 }
