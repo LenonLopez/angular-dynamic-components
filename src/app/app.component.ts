@@ -1,7 +1,7 @@
 import { Square } from './models/square.interface';
 import { DynamoService } from './services/dynamo.service';
 import { SquareComponent } from './square/square.component';
-import { ComponentRef, Component,AfterContentInit, ViewChild, ViewContainerRef, ComponentFactoryResolver } from '@angular/core';
+import { ComponentRef, Component,AfterContentInit, ViewChild, ViewContainerRef, ComponentFactoryResolver, OnInit } from '@angular/core';
 
 interface SquareComponentDict {
  [id: number]: ComponentRef<SquareComponent>;
@@ -11,7 +11,7 @@ interface SquareComponentDict {
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements AfterContentInit{
+export class AppComponent implements OnInit{
   
   @ViewChild('entry', {read: ViewContainerRef}) entry: ViewContainerRef;
   private squareCompFactory = this.resolver.resolveComponentFactory(SquareComponent);
@@ -22,20 +22,19 @@ export class AppComponent implements AfterContentInit{
   constructor(private resolver: ComponentFactoryResolver
             , private service:DynamoService){}
  
-  ngAfterContentInit(){
 
-  this.service.getSquares()
-              .subscribe((data:Square[])=> {
+  ngOnInit(){
 
-                data.forEach(square=>{
+    const $square = this.service.getSquares("square");
 
-                  this.createComponent(square);
+          $square.subscribe((data)=> {
+                  data.Items.forEach(square=>{
+                    this.createComponent(this.parseAWSObj(square));
+                  });
+          });
 
-                });
-
-              });
   }
-
+ 
   onSquareEmit(event){
     console.log("FROM APP COMPONENT:",event);
     //this.service.updateSquare(event);
@@ -69,6 +68,18 @@ export class AppComponent implements AfterContentInit{
       dynamicSquare.instance.config = configObj;
       dynamicSquare.instance.updateConfig.subscribe(this.onSquareEmit);
       this.squareDict[configObj.id] = dynamicSquare;
+    }
+
+    parseAWSObj(obj){
+      const squareObj ={id: null, name: null, position: {}};
+
+     squareObj['id'] = parseInt(obj['id']['N']);
+     squareObj['name'] = obj['name']['S'];
+     squareObj['position']['top'] = obj['position']['M']['top'];
+     squareObj['position']['left'] = obj['position']['M']['left'];
+
+     return squareObj;
+
     }
 
 }

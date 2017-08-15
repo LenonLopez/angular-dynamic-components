@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
-import {Http, Response, Headers, RequestOptions} from '@angular/http';
+import {HttpClient } from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/observable/from';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
-
+declare var AWS:any;
+declare var AWS_DYNAMO_CONFIG: any;
+AWS.config.update(AWS_DYNAMO_CONFIG);
 //interfaces
 import { Square } from '../models/square.interface';
 
@@ -12,31 +15,25 @@ import { Square } from '../models/square.interface';
 const API = '../../assets/squares.json'
 @Injectable()
 export class DynamoService {
+    private dynamodb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
+  constructor(private http:HttpClient) { }
 
-  constructor(private http:Http) { }
 
-getSquares(): Observable<Square[]>{
+getSquares(table: string):Observable<any>{
+  
+    const params = {
+        TableName: 'square'
+       };
 
-return  this.http
-        .get(API)
-        .map((response: Response)=>response.json())
-        .catch((error: any)=> Observable.throw(error.json()));
+    let request =  this.dynamodb.scan(params);
+    request.on('success', function(response){
+
+        console.log(response.data);
+
+    }); 
+
+    return Observable.from(request.promise())
 }
 
-/*updateSquare(square:Square): Observable<Square>{
-    let headers = new Headers({
-        'Content-Type': 'application/json',
-        'X-Debug': 'true'
-    });
-    let options = new RequestOptions({
-        
-        headers:headers
 
-    });
-        return  this.http
-                .put(`${API}/${passenger.id}`, passenger, options)
-                .map((response: Response)=>response.json())
-                .catch((error: any)=> Observable.throw(error.json()));
-
-}*/
 }
